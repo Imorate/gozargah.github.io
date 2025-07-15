@@ -103,9 +103,13 @@ WHERE admin_id = ADMIN_ID;
 
 - مشاهده اسم کلاینت کاربران به تعداد
 ```sql
-SELECT SUBSTR(sub_last_user_agent ,1,9), COUNT(*) FROM users
-WHERE status = 'active' GROUP By SUBSTR(sub_last_user_agent ,1,9) 
-ORDER By SUBSTR(sub_last_user_agent ,1,9);
+SELECT
+  IF(NULLIF(TRIM(sub_last_user_agent), '') IS NULL, 'Unknown', SUBSTRING_INDEX(sub_last_user_agent, '/', 1)) client,
+  COUNT(id) client_count
+FROM users
+WHERE status = 'active'
+GROUP BY client
+ORDER BY client_count DESC;
 ```
 
 - مشاهده کاربران آنلاین و تعداد آن‌ها
